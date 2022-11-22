@@ -36,5 +36,7 @@ public class Main {
                 dealership.sell(index);
             }
         }
+
+        sc.close();
     }
 }
