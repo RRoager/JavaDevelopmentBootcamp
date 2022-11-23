@@ -1,3 +1,5 @@
+package org.example;
+
 import java.util.Scanner;
 
 public class RockPaperScissors {
@@ -9,12 +11,11 @@ public class RockPaperScissors {
         System.out.println("When I say 'shoot', Choose: rock, paper, or scissors.\n");
         System.out.println("Are you ready? Write 'yes' if you are.");
 
-    //Task 1: See if the user wants to play. 
+        //Task 1: See if the user wants to play.
+        String answer = scan.nextLine();
 
-    /*Task 2: Set up the game
-    
-
-       • if the answer is yes: 
+        /*Task 2: Set up the game
+       • if the answer is yes:
              – print: Great!
              – print: rock - paper - scissors, shoot!
              – pick up user's choice.
@@ -24,15 +25,23 @@ public class RockPaperScissors {
 
        • else:
              – print: Darn, some other time...!        
-    */
-              
+        */
+        if (answer.equalsIgnoreCase("yes")) {
+            System.out.println("\nGreat");
+            System.out.println("Rock - Paper - Scissors, shoot!");
+            String userChoice = scan.nextLine();
+            String computerChoice = computerChoice();
+            String result = result(userChoice, computerChoice);
+            printResult(userChoice, computerChoice, result);
+        } else {
+            System.out.println("Darn, some other time...!");
+        }
 
         scan.close();
     }
 
 
     //Task 3  – Write a function where the computer picks a random choice.
-
     /**
      * Function name: computerChoice - picks randomly between rock paper and scissors
      * @return a choice (String).
@@ -43,12 +52,19 @@ public class RockPaperScissors {
      *      if 1: returns the choice 'paper'
      *      if 2: returns the choice 'scissors'
      */
-
+    public static String computerChoice() {
+        int random = (int) (Math.random() * 3);
+        return switch (random) {
+            case 0 -> "rock";
+            case 1 -> "paper";
+            case 2 -> "scissors";
+            default -> "";
+        };
+    }
 
 
 
     //Task 4  – Write a function that compares the choices and returns the result.
-
     /**
      * Function name: result - It returns the result of the game.
      *  @param yourChoice (String)
@@ -76,15 +92,28 @@ public class RockPaperScissors {
      *
      *
      */
-
     public static String result(String yourChoice, String computerChoice) {
         String result = "";
+        if (yourChoice.equalsIgnoreCase("rock") && computerChoice.equalsIgnoreCase("scissors")
+                || yourChoice.equalsIgnoreCase("paper") && computerChoice.equalsIgnoreCase("rock")
+                || yourChoice.equalsIgnoreCase("scissors") && computerChoice.equalsIgnoreCase("paper")) {
+            result = "You win!";
+        } else if (yourChoice.equalsIgnoreCase("scissors") && computerChoice.equalsIgnoreCase("rock")
+                || yourChoice.equalsIgnoreCase("rock") && computerChoice.equalsIgnoreCase("paper")
+                || yourChoice.equalsIgnoreCase("paper") && computerChoice.equalsIgnoreCase("scissors")) {
+            result = "You lose";
+        } else if (yourChoice.equalsIgnoreCase("scissors") && computerChoice.equalsIgnoreCase("scissors")
+                || yourChoice.equalsIgnoreCase("rock") && computerChoice.equalsIgnoreCase("rock")
+                || yourChoice.equalsIgnoreCase("paper") && computerChoice.equalsIgnoreCase("paper")) {
+            result = "Draw!";
+        } else {
+            result = "INVALID CHOICE";
+        }
 
         return result;
       }
  
      //Task 5  – Write a function that prints your choice, the computer's, and the result.
-
     /**
      * Name: printResult - It prints everything (your choice, computer choice, result)
      * @param yourChoice (String)
@@ -98,5 +127,10 @@ public class RockPaperScissors {
      *      – prints: The computer chose: <computer choice>
      *      – prints: <result>
      */
+    public static void printResult(String yourChoice, String computerChoice, String result) {
+        System.out.println("\nYou chose:\t" + yourChoice);
+        System.out.println("The computer chose:\t" + computerChoice);
+        System.out.println(result);
+    }
 
 }

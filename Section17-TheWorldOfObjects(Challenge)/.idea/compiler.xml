@@ -6,7 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Section16-CarDealership" />
+        <module name="Section17-TheWorldOfObjects(Challenge)" />
       </profile>
     </annotationProcessing>
   </component>
