@@ -76,7 +76,15 @@ public class Pokerito {
          */
         System.out.println("Your number of matches: " + yourMatches);
         System.out.println("Computer number of matches: " + computerMatches);
-        
+
+        if (yourMatches > computerMatches) {
+            System.out.println("You win!");
+        } else if (yourMatches < computerMatches) {
+            System.out.println("Computer wins!");
+        } else {
+            System.out.println("Everyone wins!");
+        }
+
         scan.close();
     }
 
