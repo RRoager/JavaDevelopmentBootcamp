@@ -50,12 +50,15 @@ public class Pokerito {
         System.out.println("Now, the dealer will draw five cards. Press enter to continue.");
         scan.nextLine();
 
+        // TODO write for loop another way
+
         for (int i = 1; i <= 5; i++) {
             String draw = randomCard();
             System.out.println("Card " + i + "\n" + draw);
             scan.nextLine();
 
             if (yourCard.equals(draw)){
+                // TODO ++yourMatches; what does this do?
                 yourMatches++;
             }
             if (computersCard.equals(draw)) {

@@ -38,6 +38,7 @@ public class CarDealer {
         this.cars[index] = null;
     }
 
+    // TODO use stream instead when we have an array of items and need to search though them
     public int search(String make, int budget) {
         for (int i = 0; i < this.cars.length; i++) {
             if (this.cars[i] == null) {

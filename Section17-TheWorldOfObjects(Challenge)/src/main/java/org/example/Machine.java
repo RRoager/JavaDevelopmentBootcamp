@@ -2,9 +2,11 @@ package org.example;
 
 import java.util.Arrays;
 
+// TODO Lombok and Records
 public class Machine {
     private Item[][] items;
 
+    // TODO Do we really need this kind of setup?
     public Machine(Item[][] items) {
         this.items = new Item[items.length][items[0].length];
 
