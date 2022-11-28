@@ -1,7 +1,8 @@
 import java.util.*;
 
 public class Hangman {
-    public static StringBuilder misses = new StringBuilder();
+    public static StringBuilder sbMisses = new StringBuilder();
+    public static String placeholder;
     public static StringBuilder sbPlaceholder = new StringBuilder();
     public static String[] words = {"ant", "baboon", "badger", "bat", "bear", "beaver", "camel",
     "cat", "clam", "cobra", "cougar", "coyote", "crow", "deer",
@@ -80,41 +81,67 @@ public class Hangman {
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
-        // System.out.println("Press 'Enter' to play Hangman.");
-        // scan.nextLine();
-        String word = "r a m"; // TODO sæt ind igen randomWord();
+        System.out.println("Press 'Enter' to play Hangman.");
+        scan.nextLine();
+        System.out.println("Guess the word by entering a letter each round.");
+        System.out.println("If you guess alle the letters of the word, you win.");
+        System.out.println("If you miss 6 guesses, you loose.");
+        System.out.println("Good luck.");
+
+        String word = randomWord();
         int misses = 0;
+        placeholder = initPlaceholder(word);
 
-        printGallows();
-        String placeholder = initPlaceholder(word);
+        while (misses < 6) {
+            printBoard(misses, placeholder);
 
-        while (misses <= 6) {
-            System.out.print("Guess: ");
             char guess = scan.next().charAt(0);
 
+            // Check if returned List is empty
             if (checkGuess(guess, word).isEmpty()) {
-                printMissedGuesses(guess);
+                // Append missed character to the global variable sbMisses
+                sbMisses.append(guess);
+                // Add miss to misses
                 misses++;
             } else {
-                String newPlaceholder = updatePlaceholder(guess, placeholder, checkGuess(guess, word));
-                if (!newPlaceholder.contains("_")) {
-                    System.out.println("You win!");
+                // Update placeholder with guessed character
+                placeholder = updatePlaceholder(guess, placeholder, checkGuess(guess, word));
+                // If there are no more underscores inform player that they won
+                if (!placeholder.contains("_")) {
+                    System.out.println("\nYou win!");
+                    System.out.println("\nThe hidden word was: " + word);
+                    break;
                 }
             }
+        }
+        // If there are 6 misses print the last gallows and inform player that they lost
+        if (misses == 6) {
+            printGallows(misses);
+            System.out.println("\nYou died!");
+            System.out.println("\nThe hidden word was: " + word);
         }
     }
 
     /**
      * @return word (String)
      * 1. Selects a random index from the String array 'words'
-     * 3. returns the word at this index
+     * 2. returns the word at the index with added space between all characters
      */
     public static String randomWord() {
         Random random = new Random();
         int index = random.nextInt(words.length);
 
-        // Returns the word with spaces between each character
         return words[index] = String.join(" ", words[index].split(""));
+    }
+
+    /**
+     * @param word (String)
+     * @return placeholder (String)
+     * 1. Replaces all characters in the word with underscore
+     * 2. Returns the placeholder String
+     */
+    public static String initPlaceholder(String word) {
+        return word.replaceAll("\\S", "_");
     }
 
     /**
@@ -139,20 +166,15 @@ public class Hangman {
     }
 
     /**
-     * @param word (String)
-     *             1. Adds a space between all characters and replaces them with underscore
-     *             2. Prints the placeholder
+     *
+     * @param guess (char)
+     * @param placeholder (String)
+     * @param indexes (List<Integer>)
+     * @return sbPlaceholder (String)
+     * 1. If the global variable sbPlaceholder is empty we append placeholder
+     * 2. Set the guess char on all the matched indexes
+     * 3. Return the updated placeholder as a String
      */
-    private static void printPlaceholder(String placeholder) {
-        System.out.println("Word: " + placeholder);
-    }
-
-    public static String initPlaceholder(String word) {
-        String placeholder = word.replaceAll("\\S", "_");
-        printPlaceholder(placeholder);
-        return placeholder;
-    }
-
     private static String updatePlaceholder(char guess, String placeholder, List<Integer> indexes) {
         if (sbPlaceholder.isEmpty()) {
             sbPlaceholder.append(placeholder);
@@ -160,24 +182,47 @@ public class Hangman {
         for (Integer index : indexes) {
             sbPlaceholder.setCharAt(index, guess);
         }
-        printPlaceholder(String.valueOf(sbPlaceholder));
+
         return String.valueOf(sbPlaceholder);
     }
 
-    private static void printMissedGuesses(char guess) {
+    //--------------------------- Print Methods ------------------------------//
 
-        misses.append(guess);
-        System.out.println("Misses: " + misses);
-    }
-
-    private static void printGallows() {
+    /**
+     * @param misses (int)
+     * 1. Print gallows based on number of misses
+     */
+    private static void printGallows(int misses) {
+        System.out.print("\n" + gallows[misses]);
     }
 
     /**
-     * @param guess
-     * @param
-     * @return indexes (int[])
+     * @param placeholder (String)
+     * 1. Prints the placeholder
      */
+    private static void printPlaceholder(String placeholder) {
+        System.out.println("Word: " + placeholder);
+    }
+
+    /**
+     * 1. Print misses
+     */
+    private static void printMissedGuesses() {
+        System.out.println("\nMisses: " + sbMisses);
+    }
+
+    /**
+     * @param misses (int)
+     * @param placeholder (String)
+     * 1. Prints gallows, placeholder, misses and guess
+     */
+    private static void printBoard(int misses, String placeholder) {
+        printGallows(misses);
+        printPlaceholder(placeholder);
+        printMissedGuesses();
+        System.out.print("\nGuess: ");
+    }
+
     /*
     public static List<Integer> checkGuess(char guess, String word) {
         List<Integer> indexes = new ArrayList<>();
@@ -197,12 +242,8 @@ public class Hangman {
                     }
                     updatePlaceholder(guess, indexes);
                     break;
-            } else {
-                // TODO find ud af hvad vi gør hvis den ikk er der
             }
         }
-
-
     }
     */
 
