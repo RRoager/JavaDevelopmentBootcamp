@@ -35,5 +35,4 @@ public class PlaceholderService {
 
         return String.valueOf(sbPlaceholder);
     }
-
 }

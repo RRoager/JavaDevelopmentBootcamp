@@ -24,6 +24,7 @@ public class GameService {
         Scanner scan = new Scanner(System.in);
         System.out.println("Press 'Enter' to play Hangman.");
         scan.nextLine();
+
         System.out.println("Guess the word by entering a letter each round.");
         System.out.println("If you guess all the letters of the word, you win.");
         System.out.println("If you miss 6 guesses, you loose.");

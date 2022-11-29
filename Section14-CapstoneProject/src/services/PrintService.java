@@ -2,7 +2,7 @@ package services;
 
 public class PrintService {
     public static String[] gallows =
-            {"""
+    {"""
     +---+
     |   |
         |
@@ -11,25 +11,25 @@ public class PrintService {
         |
     =========
     """,
-                    """
-    +---+
-    |   |
-    O   |
-        |
-        |
-        |
-    =========
-    """,
-                    """
+    """
     +---+
     |   |
     O   |
+        |
+        |
+        |
+    =========
+    """,
+    """
+    +---+
+    |   |
+    O   |
     |   |
         |
         |
     =========
     """,
-                    """
+    """
      +---+
      |   |
      O   |
@@ -38,7 +38,7 @@ public class PrintService {
          |
      =========
     """,
-                    """
+    """
      +---+
      |   |
      O   |
@@ -47,7 +47,7 @@ public class PrintService {
          |
      =========
     """,
-                    """
+    """
      +---+
      |   |
      O   |
@@ -56,7 +56,7 @@ public class PrintService {
          |
      =========
     """,
-                    """
+    """
      +---+
      |   |
      O   |
