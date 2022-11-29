@@ -1,3 +1,5 @@
+package org.example;
+
 public class TicTacToe {
     public static void main(String[] args) {
         char[][] array = {
@@ -7,8 +9,8 @@ public class TicTacToe {
         };
         
         for (int i = 0; i < array.length; i++) {
-               array[i][2-i] = 'O';
-               array[2-i][2-i] = 'X';
+           array[2-i][2-i] = 'X';
+            array[i][2-i] = 'O';
         }
 
         printArray(array);
@@ -17,9 +19,9 @@ public class TicTacToe {
    
    public static void printArray(char[][] array) {
        System.out.println();
-       for (int i = 0; i < array.length; i++) {
-           for (int j = 0; j < array[i].length; j++) {
-               System.out.print( array[i][j] + "  ");
+       for (char[] chars : array) {
+           for (char aChar : chars) {
+               System.out.print(aChar + "  ");
            }
            System.out.println();
        }
