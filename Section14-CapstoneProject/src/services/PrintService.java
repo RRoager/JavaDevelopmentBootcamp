@@ -83,6 +83,7 @@ public class PrintService {
     }
 
     /**
+     * @param sbMisses (String)
      * 1. Print misses
      */
     public void printMissedGuesses(String sbMisses) {
@@ -92,6 +93,7 @@ public class PrintService {
     /**
      * @param misses (int)
      * @param placeholder (String)
+     * @param sbMisses (String)
      * 1. Prints gallows, placeholder, misses and guess
      */
     public void printBoard(int misses, String placeholder, String sbMisses) {
