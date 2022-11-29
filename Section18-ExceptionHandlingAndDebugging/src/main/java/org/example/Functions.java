@@ -1,6 +1,6 @@
 package org.example;
 
-public class Main {
+public class Functions {
     public static void main(String[] args) {
         int random = random(15);
         System.out.println("Number: " + random);
