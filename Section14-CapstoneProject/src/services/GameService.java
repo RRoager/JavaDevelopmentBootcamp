@@ -90,11 +90,9 @@ public class GameService {
      */
     public List<Integer> checkGuess(char guess, String word) {
         List<Integer> indexes = new ArrayList<>();
-        if (word != null) {
-            for (int i = 0; i < word.length(); i++) {
-                if (word.charAt(i) == Character.toLowerCase(guess)) {
-                    indexes.add(i);
-                }
+        for (int i = 0; i < word.length(); i++) {
+            if (word.charAt(i) == Character.toLowerCase(guess)) {
+                indexes.add(i);
             }
         }
 
