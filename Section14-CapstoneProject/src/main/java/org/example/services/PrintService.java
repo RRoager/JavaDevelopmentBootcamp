@@ -1,4 +1,4 @@
-package services;
+package org.example.services;
 
 public class PrintService {
     public static String[] gallows =

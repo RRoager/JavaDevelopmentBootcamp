@@ -1,4 +1,4 @@
-package services;
+package org.example.services;
 
 import java.util.ArrayList;
 import java.util.List;
