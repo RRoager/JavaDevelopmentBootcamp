@@ -58,7 +58,6 @@ public class GameService {
                     break;
                 }
             }
-            scan.close();
         }
         // If there are 6 misses print the last gallows and inform player that they lost
         if (misses == 6) {
@@ -66,6 +65,7 @@ public class GameService {
             System.out.println("\nYou died!");
             System.out.println("\nThe hidden word was: " + word);
         }
+        scan.close();
     }
 
     /**
