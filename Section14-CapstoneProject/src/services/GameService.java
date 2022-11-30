@@ -58,6 +58,7 @@ public class GameService {
                     break;
                 }
             }
+            scan.close();
         }
         // If there are 6 misses print the last gallows and inform player that they lost
         if (misses == 6) {
