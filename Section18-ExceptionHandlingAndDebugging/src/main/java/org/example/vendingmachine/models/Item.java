@@ -7,7 +7,16 @@ public class Item {
     public Item(String name, double price, int quantity) {
         this.name = name;
         this.price = price;
-        this.quantity = quantity;   
+        this.quantity = quantity;
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("name cannot be null/blank.");
+        }
+        if (price < 0) {
+            throw new IllegalArgumentException("price cannot be less than zero.");
+        }
+        if (quantity < 0) {
+            throw new IllegalArgumentException("quantity cannot be less than zero.");
+        }
     }
     public Item(Item source) {
         this.name = source.name;
@@ -24,12 +33,21 @@ public class Item {
         return quantity;
     }
     public void setName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("name cannot be null/blank.");
+        }
         this.name = name;
     }
     public void setPrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("price cannot be less than zero.");
+        }
         this.price = price;
     }
     public void setQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("quantity cannot be less than zero.");
+        }
         this.quantity = quantity;
     }
 
