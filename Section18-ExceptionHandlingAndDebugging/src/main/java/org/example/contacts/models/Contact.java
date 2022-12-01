@@ -2,6 +2,7 @@ package org.example.contacts.models;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Contact {
     private String name;
@@ -9,7 +10,7 @@ public class Contact {
     private LocalDate birthDate;
     private String phoneNumber;
 
-    public Contact(String name, String birthDate, String phoneNumber) {
+    public Contact(String name, String phoneNumber, String birthDate) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("name cannot be null/blank");
         }
@@ -21,16 +22,16 @@ public class Contact {
         }
 
         this.name = name;
+        this.phoneNumber = phoneNumber;
         this.birthDate = LocalDate.parse(birthDate);
         this.age = LocalDate.now().getYear() - this.birthDate.getYear();
-        this.phoneNumber = phoneNumber;
     }
 
     public Contact(Contact source) {
         this.name = source.name;
+        this.phoneNumber = source.phoneNumber;
         this.birthDate = source.birthDate;
         this.age = source.age;
-        this.phoneNumber = source.phoneNumber;
     }
 
     public String getName() {
@@ -42,6 +43,20 @@ public class Contact {
             throw new IllegalArgumentException("name cannot be null/blank");
         }
         this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.isBlank()) {
+            throw new IllegalArgumentException("phone number cannot be null/blank");
+        }
+        if (phoneNumber.length() < 5) {
+            throw new IllegalArgumentException("phone number can't be less than 5 characters");
+        }
+        this.phoneNumber = phoneNumber;
     }
 
     public int getAge() {
@@ -60,20 +75,6 @@ public class Contact {
 
     private void setAge(int birthYear) {
         this.age = LocalDate.now().getYear() - birthYear;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        if (phoneNumber == null || phoneNumber.isBlank()) {
-            throw new IllegalArgumentException("phone number cannot be null/blank");
-        }
-        if (phoneNumber.length() < 5) {
-            throw new IllegalArgumentException("phone number can't be less than 5 characters");
-        }
-        this.phoneNumber = phoneNumber;
     }
 
     @Override

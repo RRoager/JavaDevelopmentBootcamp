@@ -3,30 +3,22 @@ package org.example.contacts;
 import org.example.contacts.models.Contact;
 import org.example.contacts.models.ContactManager;
 
-import java.time.LocalDate;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class Main {
+    public static ContactManager cm = new ContactManager();
     public static void main(String[] args) {
         try {
-            Contact contact1 = new Contact("Rasmus", "1987-05-10", "+45 42765614");
-            Contact contact2 = new Contact("Bent", "1995-10-15", "+45 45896258");
-            Contact contact3 = new Contact("Lone", "1950-12-05", "+45 41358796");
-
-            ContactManager cm = new ContactManager();
-
-            cm.addContact(contact1);
-            cm.addContact(contact2);
-            cm.addContact(contact3);
-
+            loadContacts("contacts.txt");
+            System.out.println("CONTACTS LOADED\n\n");
             System.out.println(cm);
-
-            cm.removeContact("Bent");
-
-            System.out.println(cm);
-        } catch (Exception e) {
+            manageContacts();
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("Process Complete");
+            System.out.println("\nProcess Complete.");
         }
     }
 
@@ -41,6 +33,39 @@ public class Main {
      *   •        case c: break the loop.
      *   • 3. close Scanner.
      */
+    public static void manageContacts() {
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Would you like to \n\ta) add another contact\n\tb) remove a contact \n\tc) exit");
+            String response = sc.nextLine();
+            if (response.equals("a")) {
+                System.out.print("\tName: ");
+                String name = sc.nextLine();
+                System.out.print("\tPhone Number: ");
+                String phoneNumber = sc.nextLine();
+                System.out.print("\tBirth Date: ");
+                String birthDate = sc.nextLine();
+                if (name.isBlank() || phoneNumber.isBlank() || phoneNumber.length() < 5) {
+                    System.out.println("\nThe input you provided is not valid. Registration failed.");
+                } else {
+                    try {
+                        cm.addContact(new Contact(name, phoneNumber, birthDate));
+                    } finally { //contacts will re-print regardless of the outcome...
+                        System.out.println("\n\nUPDATED CONTACTS\n\n" + cm);
+                    }
+                }
+            } else if (response.equals("b")) {
+                System.out.println("\nWho would you like to remove?");
+                cm.removeContact(sc.nextLine());
+                System.out.println("\n\nUPDATED CONTACTS\n\n" + cm);
+
+            } else {
+                break;
+            }
+        }
+        sc.close();
+    }
 
 
 
@@ -54,5 +79,14 @@ public class Main {
      *   • 2. From the manager object, it adds all contacts to the contacts list.
      *        Hint: use scan.next to grab the next String separated by white space.
      */
+    public static void loadContacts(String fileName) throws FileNotFoundException {
+        FileInputStream fis = new FileInputStream(fileName);
+        Scanner scFile = new Scanner(fis);
+        while (scFile.hasNextLine()) {
+            Contact contact = new Contact(scFile.next(), scFile.next(), scFile.next());
+            cm.addContact(contact);
+        }
+        scFile.close();
+    }
 
 }

@@ -23,6 +23,9 @@ public class ContactManager {
     }
 
     public void removeContact(String contactName) {
+        if (contacts.isEmpty()) {
+            throw new IllegalStateException("Cannot remove from an empty list.");
+        }
         contacts.removeIf(c -> c.getName().equals(contactName));
     }
 
