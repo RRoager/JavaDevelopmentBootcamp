@@ -33,6 +33,7 @@ public class Store {
         if (movies.isEmpty()) {
             throw new IllegalStateException("No movies in store.");
         }
+
         if (movieName == null ||
                 movieName.isBlank()) {
             throw new IllegalArgumentException("Name must not be null or blank.");
@@ -41,6 +42,9 @@ public class Store {
                 action.equalsIgnoreCase("rent") ||
                 action.equalsIgnoreCase("return"))) {
             throw new IllegalArgumentException("Action must be sell, rent or return.");
+        }
+        if (movies.stream().anyMatch(m -> m.getName().equals(movieName) || m.isAvailable())) {
+            throw new IllegalStateException("Cannot sell rented movie");
         }
 
         Optional<Movie> movie = movies.stream().filter(m -> m.getName().equalsIgnoreCase(movieName)).findAny();
