@@ -1,7 +1,9 @@
 package org.example.shoppingcart.src.main.models;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Cart {
     ArrayList<Item> items;
@@ -50,7 +52,7 @@ public class Cart {
     }
 
     public double getTax(double subtotal) {
-        DecimalFormat formatter = new DecimalFormat("#.##");
+        DecimalFormat formatter = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.ENGLISH));
         return Double.parseDouble(formatter.format(subtotal * 0.13));
     }
 

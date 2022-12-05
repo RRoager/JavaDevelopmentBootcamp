@@ -39,6 +39,26 @@ public class CartTest {
         assertEquals(3.98, cart.getSubtotal(), 0);
     }
 
+    @Test
+    public void taxIsValid() {
+        assertEquals(0.52, cart.getTax(cart.getSubtotal()), 0);
+    }
 
+    @Test
+    public void totalIsValid() {
+        assertEquals(4.5, cart.getTotal(cart.getSubtotal(), cart.getTax(cart.getSubtotal())), 0);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void invalidRemoveState() {
+        cart.clear();
+        cart.remove("Pepsi");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void invalidCheckoutState() {
+        cart.clear();
+        cart.checkout();
+    }
     
 }
