@@ -43,7 +43,7 @@ public class Store {
                 action.equalsIgnoreCase("return"))) {
             throw new IllegalArgumentException("Action must be sell, rent or return.");
         }
-        if (movies.stream().anyMatch(m -> m.getName().equals(movieName) || m.isAvailable())) {
+        if (movies.stream().anyMatch(m -> m.getName().equals(movieName) && !(m.isAvailable()))) {
             throw new IllegalStateException("Cannot sell rented movie");
         }
 

@@ -8,6 +8,7 @@ import java.util.Locale;
 public class Cart {
     ArrayList<Item> items;
 
+
     public Cart() {
         this.items = new ArrayList<Item>();
     }
