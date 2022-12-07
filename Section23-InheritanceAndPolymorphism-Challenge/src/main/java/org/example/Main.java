@@ -3,11 +3,6 @@ package org.example;
 import org.example.model.Bank;
 import org.example.model.Transaction;
 import org.example.model.account.Account;
-import org.example.model.account.Chequing;
-import org.example.model.account.Loan;
-import org.example.model.account.Savings;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -17,8 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-   static String ACCOUNTS_FILE = "src/main/data/accounts.txt";            
-   static String TRANSACTIONS_FILE = "src/main/data/transactions.txt";
+   static String ACCOUNTS_FILE = "src/main/java/org/example/data/accounts.txt";
+   static String TRANSACTIONS_FILE = "\"src/main/java/org/example/data/transactions.txt\"";
    static Bank bank = new Bank();
 
     public static void main(String[] args) {
@@ -86,7 +81,7 @@ public class Main {
      *    3. Returns an ArrayList of Account objects.
      */
     public static ArrayList<Account> returnAccounts() throws FileNotFoundException {
-        FileInputStream fis = new FileInputStream("src/main/java/org/example/data/accounts.txt");
+        FileInputStream fis = new FileInputStream(ACCOUNTS_FILE);
         Scanner scan = new Scanner(fis);
         ArrayList<Account> accounts = new ArrayList<>();
         while (scan.hasNextLine()) {
@@ -119,7 +114,7 @@ public class Main {
      *    3. Sorts the ArrayList.
      */
     public static ArrayList<Transaction> returnTransactions() throws FileNotFoundException {
-        FileInputStream fis = new FileInputStream("src/main/java/org/example/data/transactions.txt");
+        FileInputStream fis = new FileInputStream(TRANSACTIONS_FILE);
         Scanner scan = new Scanner(fis);
         ArrayList<Transaction> transactions = new ArrayList<>();
         while (scan.hasNextLine()) {
