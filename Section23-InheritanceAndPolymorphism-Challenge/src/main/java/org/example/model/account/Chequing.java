@@ -2,10 +2,6 @@ package org.example.model.account;
 
 import org.example.model.account.impl.Taxable;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
-
 public class Chequing extends Account implements Taxable {
     private static final double OVERDRAFT_FEE = 5.50;
     private static final double OVERDRAFT_LIMIT = -200;

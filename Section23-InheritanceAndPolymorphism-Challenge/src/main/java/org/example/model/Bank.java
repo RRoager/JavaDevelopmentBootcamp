@@ -7,7 +7,6 @@ import org.example.model.account.impl.Taxable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Bank {
     private ArrayList<Account> accounts;
