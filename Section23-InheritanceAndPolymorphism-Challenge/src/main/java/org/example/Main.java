@@ -7,6 +7,12 @@ import org.example.model.account.Chequing;
 import org.example.model.account.Loan;
 import org.example.model.account.Savings;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -16,36 +22,22 @@ public class Main {
    static Bank bank = new Bank();
 
     public static void main(String[] args) {
-        Account[] accounts = new Account[] {
-                new Chequing("f84c43f4-a634-4c57-a644-7602f8840870", "Michael Scott", 1524.51),
-                new Savings("ce07d7b3-9038-43db-83ae-77fd9c0450c9", "Saul Goodman", 2241.60)
-        };
 
-        for (Account account : accounts) {
-            bank.addAccount(account);
+        try {
+            ArrayList<Account> accounts = returnAccounts();
+            loadAccounts(accounts);
+
+            ArrayList<Transaction> transactions = returnTransactions();
+            runTransactions(transactions);
+            bank.deductTaxes();
+            for (Account account : accounts) {
+                System.out.println("\n\t\t\t\t\t ACCOUNT\n\n\t"+account+"\n\n");
+                transactionHistory(account.getId());
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
         }
-
-        Transaction[] transactions = new Transaction[] {
-                new Transaction(Transaction.Type.WITHDRAW, 1546905600, "f84c43f4-a634-4c57-a644-7602f8840870", 624.99),
-                new Transaction(Transaction.Type.DEPOSIT, 1578700800, "f84c43f4-a634-4c57-a644-7602f8840870", 441.93),
-                new Transaction(Transaction.Type.WITHDRAW, 1547078400, "f84c43f4-a634-4c57-a644-7602f8840870", 546.72),
-                new Transaction(Transaction.Type.WITHDRAW, 1546732800, "f84c43f4-a634-4c57-a644-7602f8840870", 546.72),
-                new Transaction(Transaction.Type.DEPOSIT, 1578355200, "f84c43f4-a634-4c57-a644-7602f8840870", 635.95),
-                new Transaction(Transaction.Type.WITHDRAW, 1547078400, "ce07d7b3-9038-43db-83ae-77fd9c0450c9", 875.64),
-                new Transaction(Transaction.Type.WITHDRAW, 1578614400, "ce07d7b3-9038-43db-83ae-77fd9c0450c9", 912.45),
-                new Transaction(Transaction.Type.WITHDRAW, 1577836800, "ce07d7b3-9038-43db-83ae-77fd9c0450c9", 695.09),
-                new Transaction(Transaction.Type.WITHDRAW, 1609459200, "ce07d7b3-9038-43db-83ae-77fd9c0450c9", 917.21),
-                new Transaction(Transaction.Type.WITHDRAW, 1578096000, "ce07d7b3-9038-43db-83ae-77fd9c0450c9", 127.94),
-                new Transaction(Transaction.Type.WITHDRAW, 1546819200, "ce07d7b3-9038-43db-83ae-77fd9c0450c9", 612.52)
-        };
-
-        for (Transaction transaction : transactions) {
-            bank.addTransaction(transaction);
-        }
-
-        Transaction[] filteredTransactions = bank.getTransactions("f84c43f4-a634-4c57-a644-7602f8840870");
-
-        Account account = bank.getAccount("ce07d7b3-9038-43db-83ae-77fd9c0450c9");
     }
 
     /**
@@ -63,5 +55,112 @@ public class Main {
              System.out.println(e.getMessage());
          }
      }
+
+    /**
+     * Name: createObject
+     * @param values (String[] values)
+     * @return Account
+     *
+     * Inside the function:
+     *   1. Dynamically creates a Chequing, Loan, or Savings object based on the values array.
+     */
+    public static Account createObject(String[] values) {
+        try {
+            return (Account) Class.forName("org.example.model.account." + values[0])
+                    .getConstructor(String.class, String.class, double.class)
+                    .newInstance(values[1], values[2], Double.parseDouble(values[3]));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Name: returnAccounts()
+     * @return ArrayList<Account>
+     * @throws FileNotFoundException
+     *
+     * Inside the function:
+     *    1. Creates a Scanner object and reads the data from accounts.txt.
+     *    2. Creates an Account object for every line in accounts.txt.
+     *    3. Returns an ArrayList of Account objects.
+     */
+    public static ArrayList<Account> returnAccounts() throws FileNotFoundException {
+        FileInputStream fis = new FileInputStream("src/main/java/org/example/data/accounts.txt");
+        Scanner scan = new Scanner(fis);
+        ArrayList<Account> accounts = new ArrayList<>();
+        while (scan.hasNextLine()) {
+            accounts.add(createObject(scan.nextLine().split(",")));
+        }
+        scan.close();
+        return accounts;
+    }
+
+    /**
+     * Name: loadAccounts
+     * @param accounts (ArrayList<Account>)
+     *
+     * Inside the function:
+     *   1. Loads every account into the Bank object.
+     *
+     */
+    public static void loadAccounts(ArrayList<Account> accounts) {
+        accounts.forEach(a -> bank.addAccount(a));
+    }
+
+    /**
+     * Name: returnTransactions()
+     * @return ArrayList<Transaction>
+     * @throws FileNotFoundException
+     *
+     * Inside the function:
+     *    1. Creates a Scanner object and reads the data from transactions.txt.
+     *    2. Populates an ArrayList with transaction objects.
+     *    3. Sorts the ArrayList.
+     */
+    public static ArrayList<Transaction> returnTransactions() throws FileNotFoundException {
+        FileInputStream fis = new FileInputStream("src/main/java/org/example/data/transactions.txt");
+        Scanner scan = new Scanner(fis);
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        while (scan.hasNextLine()) {
+            String[] values = scan.nextLine().split(",");
+            transactions.add(new Transaction(Transaction.Type.valueOf(values[1]), Long.parseLong(values[0]), values[2], Double.parseDouble(values[3])));
+        }
+        scan.close();
+        Collections.sort(transactions);
+        return transactions;
+    }
+
+    /**
+     * Name: runTransactions
+     * @param transactions ArrayList<Transaction>
+     *
+     * Inside the function:
+     *  1. Executes every transaction using bank.execute.
+     */
+    public static void runTransactions(ArrayList<Transaction> transactions) {
+        transactions.forEach(t -> bank.executeTransaction(t));
+    }
+
+    /**
+     * Name: transactionHistory
+     * @param id (String)
+     *
+     * Inside the function
+     *   1. Print: \t\t\t\t   TRANSACTION HISTORY\n\t
+     *   2. Print every transaction that corresponds to the id. (Waits 300 milliseconds before printing the next one)
+     *             - Use this format "\t"+transaction+"\n"
+     *   3. Print: \n\t\t\t\t\tAFTER TAX\n
+     *   4. Print: "\t" + account that corresponds to id +"\n\n\n\n"
+     */
+    public static void transactionHistory(String id) {
+        System.out.println("\t\t\t\t   TRANSACTION HISTORY\n\t");
+        for (Transaction transaction : bank.getTransactions(id)) {
+            wait(300);
+            System.out.println("\t"+transaction+"\n");
+        }
+        System.out.println("\n\t\t\t\t\tAFTER TAX\n");
+        System.out.println("\t" + bank.getAccount(id) +"\n\n\n\n");
+    }
 
 }

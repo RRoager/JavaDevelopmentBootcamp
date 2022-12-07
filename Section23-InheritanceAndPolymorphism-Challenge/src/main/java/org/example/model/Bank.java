@@ -1,8 +1,11 @@
 package org.example.model;
 
 import org.example.model.account.Account;
+import org.example.model.account.Chequing;
+import org.example.model.account.impl.Taxable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,8 +36,7 @@ public class Bank {
      * Inside the function:
      *   1. adds a new transaction object to the array list.
      */
-    //TODO Er ved task 5 i Bank Management 7
-    public void addTransaction(Transaction transaction) {
+    private void addTransaction(Transaction transaction) {
         this.transactions.add(new Transaction(transaction));
     }
 
@@ -60,5 +62,66 @@ public class Bank {
     public Account getAccount(String transactionId) {
         return this.accounts.stream().filter(a -> a.getId().equals(transactionId)).findFirst().orElse(null);
     }
-  
+
+    private void withdrawTransaction(Transaction transaction) {
+        if (getAccount(transaction.getId()).withdraw(transaction.getAmount())) {
+            addTransaction(transaction);
+        }
+    }
+
+    private void depositTransaction(Transaction transaction) {
+        getAccount(transaction.getId()).deposit(transaction.getAmount());
+        addTransaction(transaction);
+    }
+
+    /**
+     * Name: executeTransaction
+     * @param transaction
+     *
+     * Inside the function:
+     *  1. calls withdrawTransaction if transaction type is WITHDRAW
+     *  2. calls depositTransaction if transaction type is DEPOSIT
+     *
+     */
+    public void executeTransaction(Transaction transaction) {
+        if (transaction.getType().equals(Transaction.Type.WITHDRAW)) {
+            withdrawTransaction(transaction);
+        } else if (transaction.getType().equals(Transaction.Type.DEPOSIT)) {
+            depositTransaction(transaction);
+        }
+    }
+
+    /**
+     * Name: getIncome
+     * @param account (Taxable)
+     * @return double
+     *
+     * Inside the function:
+     *   1. Gets every transaction that matches the account's id.
+     *   2. Maps every transaction to a double.
+     *       - Transactions of type WITHDRAW are mapped to negative numbers.
+     *       - Transactions of type DEPOSIT are mapped to positive numbers.
+     *   3. Takes the sum of every number and returns the income.
+     *
+     */
+    private double getIncome(Taxable account) {
+        return Arrays.stream(getTransactions(((Chequing) account).getId())).mapToDouble(t -> {
+            if (t.getType().equals(Transaction.Type.WITHDRAW)) {
+                return -t.getAmount();
+            } else if (t.getType().equals(Transaction.Type.DEPOSIT)) {
+                return t.getAmount();
+            }
+            return 0;
+        }).sum();
+    }
+
+    public void deductTaxes() {
+        for (Account account : accounts) {
+            // Checks if the account implements the Taxable interface
+            if (Taxable.class.isAssignableFrom(account.getClass())) {
+                Taxable taxable = (Taxable)account;
+                taxable.tax(getIncome(taxable));
+            }
+        }
+    }
 }
