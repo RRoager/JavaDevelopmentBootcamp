@@ -10,6 +10,9 @@ public class Trade {
     private double price;
 
     public Trade(Stock stock, Type type, int shares, double price) {
+        if (price < 0 || shares <= 0) {
+            throw new IllegalArgumentException("Price and Shares cannot be 0");
+        }
         this.stock = stock;
         this.type = type;
         this.shares = shares;
@@ -44,6 +47,9 @@ public class Trade {
     }
 
     public void setShares(int shares) {
+        if (shares <= 0) {
+            throw new IllegalArgumentException("Shares cannot be 0");
+        }
         this.shares = shares;
     }
 
@@ -52,6 +58,9 @@ public class Trade {
     }
 
     public void setPrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("Price cannot be 0");
+        }
         this.price = price;
     }
 

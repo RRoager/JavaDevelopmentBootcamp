@@ -2,8 +2,12 @@ package src.main.model.account;
 
 import src.main.model.Trade;
 import src.main.model.Trade.Stock;
+import src.main.utils.Color;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
+import java.util.Locale;
 
 public abstract class Account {
     private double funds;
@@ -47,16 +51,16 @@ public abstract class Account {
         this.portfolio.put(stock, shares);
     }
 
-    public abstract void executeTrade(Trade trade);
+    public abstract boolean executeTrade(Trade trade);
 
     /**
      * Name: purchase
      * @param trade (Trade)
      * @param fee (double)
-     * 1. Save total price of purchase as a double
+     * 1. Store total price of purchase as a double
      * 2. If there is enough funds:
      * 3. Subtract the price and fee from funds
-     * 4. Add shares to holding
+     * 4. Add shares to portfolio
      */
     protected void purchase(Trade trade, double fee) {
         double price = trade.getShares() * trade.getPrice();
@@ -70,9 +74,9 @@ public abstract class Account {
      * Name: sell
      * @param trade (Trade)
      * @param fee (double)
-     * 1. If there is enough of the shares in holding:
+     * 1. If there is enough of the shares in portfolio:
      * 2. Remove the number of shares sold
-     * 3. Remove shares from holding
+     * 3. Add funds from trade
      */
     protected void sell(Trade trade, double fee) {
         if (trade.getShares() <= this.getShares(trade.getStock())) {
@@ -84,8 +88,8 @@ public abstract class Account {
     /**
      * Name addShares
      * @param trade (Trade)
-     * 1. Get current number from holding of the purchased shares
-     * 2. Add the share from the trade to holding
+     * 1. Get current number of the purchased shares in portfolio
+     * 2. Add the purchased share to portfolio
      */
     private void addShares(Trade trade) {
         int currentShares = getCurrentShares(trade.getStock());
@@ -101,14 +105,14 @@ public abstract class Account {
      */
     private void addFunds(Trade trade, double fee) {
         double total = trade.getShares() * trade.getPrice();
-        this.setFunds(this.getFunds() + total - total * fee);
+        this.setFunds(this.getFunds() + total - (total * fee));
     }
 
     /**
      * Name getCurrentShares
      * @param stock (Stock)
      * @return int
-     * 1: If no stocks of the type return 0
+     * 1: If there is none of the specific stocks in portfolio return 0
      * 2: Else return number of stocks
      */
     private int getCurrentShares(Stock stock) {
@@ -117,4 +121,27 @@ public abstract class Account {
         }
         return portfolio.get(stock);
     }
+
+    protected double round(double amount) {
+        DecimalFormat formatter = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.ENGLISH));
+        return Double.parseDouble(formatter.format(amount));
+    }
+
+    private String displayPortfolio() {
+        StringBuilder string = new StringBuilder();
+        for (HashMap.Entry<Stock, Integer> entry : portfolio.entrySet()) {
+            string.append("  " + Color.BLUE).append(entry.getKey()).append("\t\t");
+            string.append(Color.GREEN).append(entry.getValue());
+            string.append("\n");
+        }
+        return string.toString();
+    }
+
+    public String toString() {
+        return "\n  Stock\t\t"  + Color.RESET + "Shares" +
+                "\n\n" + displayPortfolio() + Color.RESET +
+                "\n  Funds Left\t" + Color.GREEN + "$" + round(this.getFunds()) + Color.RESET;
+    }
+
+
 }
